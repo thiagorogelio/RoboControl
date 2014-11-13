@@ -30,11 +30,13 @@ public class Connection {
             saida = new PrintStream(client.getOutputStream());
             this.connected = true;
             entrada = new Scanner(client.getInputStream());
-            //if(ask("robo?").contains("claro!"))
-            this.connected = true;
-            //else {
-                //desconnect();
-            return true;
+            if(ask("?").contains("robot!")){
+                this.connected = true;
+                return true;
+            }
+            else 
+                desconnect();
+            return false;
         }catch(IOException e){  
             return false;
         }
