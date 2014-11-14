@@ -6,8 +6,13 @@ package robocontrol.graphinterface;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.Timer;
 import robocontrol.Connection;
+import net.java.games.input.Component;
+import net.java.games.input.Component.Identifier;
+import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
 
 /**
  *
@@ -19,17 +24,51 @@ public class graphMain extends javax.swing.JFrame {
      * Creates new form graphMain
      */
     
+    private Controller controle;
+    private int antxAxisPercentage, antyAxisPercentage;
+    
     public graphMain() {
+        antxAxisPercentage = 50;
+        antyAxisPercentage = 50;
+        controle = null;
         autonState = false;
         initComponents();
         conexao = new Connection();
-        time = new Timer(1000,clocklistner);  
+        time = new Timer(1000, clocklistner);  
         time.start();
         connectedIcon = new javax.swing.ImageIcon(getClass().getResource("/icon/connected.png"));
         disconnectedIcon = new javax.swing.ImageIcon(getClass().getResource("/icon/disconnected.png"));
+        jconnectedIcon = new javax.swing.ImageIcon(getClass().getResource("/icon/joystick_enabled.png"));
+        jdisconnectedIcon = new javax.swing.ImageIcon(getClass().getResource("/icon/no_joystick.png"));
         leitState = false;
+        searchForControllers();
+        if(controle != null){
+            ctime = new Timer(25, controllistner);  
+            ctime.start();
+        }  
     }
+    
+    private void searchForControllers() {
+        Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
 
+        for(int i = 0; i < controllers.length; i++){
+            Controller controller = controllers[i];
+            
+            if (controller.getType() == Controller.Type.STICK){
+                controle = controller;
+                JoyLabel.setIcon(jconnectedIcon);
+                JoyLabel.setToolTipText("Conectado");
+            }
+        }
+    }
+    
+    public int getAxisValueInPercentage(float axisValue)
+    {
+        return (int)(((2 - (1 - axisValue)) * 100) / 2);
+    }
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -70,6 +109,7 @@ public class graphMain extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jToggleButton2 = new javax.swing.JToggleButton();
         jSeparator3 = new javax.swing.JSeparator();
+        JoyLabel = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -79,7 +119,6 @@ public class graphMain extends javax.swing.JFrame {
         jMenuItem4 = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jMenuItem5 = new javax.swing.JMenuItem();
-        jMenu5 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
 
@@ -87,7 +126,7 @@ public class graphMain extends javax.swing.JFrame {
         setTitle("Robo Control");
         setResizable(false);
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Movimentação", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(44, 141, 233)));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Movimentação", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(44, 141, 233))); // NOI18N
 
         jButton1.setText("↑");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -184,7 +223,7 @@ public class graphMain extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Manipulador", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(44, 141, 233)));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Manipulador", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(44, 141, 233))); // NOI18N
 
         jLabel2.setFont(new java.awt.Font("Cantarell", 0, 13)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -286,7 +325,7 @@ public class graphMain extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Manual", jPanel2);
 
-        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Função", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(44, 141, 233)));
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Função", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(44, 141, 233))); // NOI18N
         jPanel7.setPreferredSize(new java.awt.Dimension(159, 200));
 
         jToggleButton1.setText("Ativar");
@@ -316,7 +355,7 @@ public class graphMain extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
                 .addComponent(jToggleButton1)
                 .addGap(35, 35, 35))
         );
@@ -327,7 +366,7 @@ public class graphMain extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
+                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
@@ -344,7 +383,7 @@ public class graphMain extends javax.swing.JFrame {
         statusIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/disconnected.png"))); // NOI18N
         statusIcon.setToolTipText("Desconectado");
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Sensores", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, new java.awt.Color(44, 141, 233)));
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Sensores", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(44, 141, 233))); // NOI18N
 
         jCheckBox1.setText("Line Finder");
 
@@ -400,6 +439,9 @@ public class graphMain extends javax.swing.JFrame {
                 .addGap(36, 36, 36))
         );
 
+        JoyLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/no_joystick.png"))); // NOI18N
+        JoyLabel.setToolTipText("Joystick Desconectado!");
+
         jMenu1.setText("Arquivo");
 
         jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
@@ -448,10 +490,6 @@ public class graphMain extends javax.swing.JFrame {
 
         jMenu2.add(jMenu4);
 
-        jMenu5.setText("Joystick");
-        jMenu5.setEnabled(false);
-        jMenu2.add(jMenu5);
-
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("Ajuda");
@@ -486,7 +524,9 @@ public class graphMain extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jLabel3)))
-                        .addGap(8, 8, 8)
+                        .addGap(7, 7, 7)
+                        .addComponent(JoyLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(statusIcon)))
                 .addContainerGap())
         );
@@ -498,14 +538,17 @@ public class graphMain extends javax.swing.JFrame {
                     .addComponent(jTabbedPane2)
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(statusIcon, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(statusIcon, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                    .addComponent(JoyLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, 0))
         );
+
+        JoyLabel.getAccessibleContext().setAccessibleDescription("Sem Joystick");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -643,27 +686,103 @@ public class graphMain extends javax.swing.JFrame {
                     if(jCheckBox2.isSelected())
                         ask = ask + "1";
                     else ask = ask + "0";
-                    conexao.send(ask);
-                    String resp = "vl 1 233";//conexao.ask(ask);
+                    String resp = conexao.ask(ask);
                     if(jCheckBox1.isSelected())
                         jTextField1.setText(resp.subSequence(3, 4).toString());
                     if(jCheckBox2.isSelected())
                         jTextField2.setText(resp.subSequence(5, resp.length()).toString());
                 }
-            }  
+            }
         }  
-    ); 
+    );
+    
+    ActionListener controllistner = (  
+        new ActionListener(){  
+            public void actionPerformed(ActionEvent e){  
+                if( !controle.poll() ){
+                    controle = null;
+                }
+            
+                // X axis and Y axis
+                int xAxisPercentage = 0;
+                int yAxisPercentage = 0;
+                Component[] components = controle.getComponents();
+                
+            for(int i = 0; i < components.length; i++)
+            {
+                Component component = components[i];
+                Identifier componentIdentifier = component.getIdentifier();
+                
+                // Buttons
+                //if(component.getName().contains("Button")){ // If the language is not english, this won't work.
+                if(componentIdentifier.getName().matches("^[0-9]*$")){ // If the component identifier name contains only numbers, then this is a button.
+                    // Is button pressed?
+                    boolean isItPressed = true;
+                    if(component.getPollData() == 0.0f)
+                        isItPressed = false;
+                    
+                    if(isItPressed)
+                          System.out.println(componentIdentifier.getName());
+                    
+                    // Button index
+                    String buttonIndex;
+                    buttonIndex = component.getIdentifier().toString();
+                    
+                    
+                    // We know that this component was button so we can skip to next component.
+                    continue;
+                }
+                
+                // Hat switch
+                if(componentIdentifier == Component.Identifier.Axis.POV){
+                    float hatSwitchPosition = component.getPollData();
+                    
+                    // We know that this component was hat switch so we can skip to next component.
+                    continue;
+                }
+                
+                // Axes
+                if(component.isAnalog()){
+                    float axisValue = component.getPollData();
+                    int axisValueInPercentage = getAxisValueInPercentage(axisValue);
+                    
+                    // X axis
+                    if(componentIdentifier == Component.Identifier.Axis.X){
+                        xAxisPercentage = axisValueInPercentage;
+                        continue; // Go to next component.
+                    }
+                    // Y axis
+                    if(componentIdentifier == Component.Identifier.Axis.Y){
+                        yAxisPercentage = axisValueInPercentage;
+                        continue; // Go to next component.
+                    }
+                }
+            }
+
+            if(xAxisPercentage - antxAxisPercentage > 49 || xAxisPercentage - antxAxisPercentage < -49){
+                antxAxisPercentage = xAxisPercentage;
+                System.out.println(xAxisPercentage);
+                //if(xAxisPercentage > 50)
+                  //jButton3.
+            }
+            }
+        }  
+    );
     /**
      * @param args the command line arguments
      */
     public Connection conexao;
     private graphDef defini;
     private Timer time;
+    private Timer ctime;
     private Boolean autonState;
     private Boolean leitState;
     private javax.swing.ImageIcon connectedIcon;
     private javax.swing.ImageIcon disconnectedIcon;
+    private javax.swing.ImageIcon jconnectedIcon;
+    private javax.swing.ImageIcon jdisconnectedIcon;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel JoyLabel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -681,7 +800,6 @@ public class graphMain extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
