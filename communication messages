@@ -1,0 +1,38 @@
+Comandos communicação:
+
+Auth
+
+wh
+
+Movimento:
+
+mu <0-100>
+md <0-100>
+ml <0-100>
+mr <0-100>
+st
+
+Manipulador:
+
+ra <0-100>
+al <0-100>
+rg <0-100>
+ab <0-100>
+
+Autônomo:
+
+at fol
+at avo
+at cap
+at off
+
+Leitura:
+
+rd <1|0> <1|0>
+   line  ultra
+
+Resp:
+
+vl <0-???> <0-???>
+    line    ultra
+

@@ -30,13 +30,13 @@ public class Connection {
             saida = new PrintStream(client.getOutputStream());
             this.connected = true;
             entrada = new Scanner(client.getInputStream());
-            if(ask("?").contains("robot!")){
+            //if(ask("?").contains("robot!")){
                 this.connected = true;
                 return true;
-            }
+            /*}
             else 
                 desconnect();
-            return false;
+            return false;*/
         }catch(IOException e){  
             return false;
         }
@@ -52,15 +52,17 @@ public class Connection {
         }
     }
     public void send(String msg){
+            msg = msg + "*";
             if(this.connected)
                  saida.println(msg);
     }
     public String ask(String msg){
         String leit = null;
-            if(this.connected){
-                 saida.println(msg);
-                 leit = entrada.nextLine();
-            }
+        msg = msg + "*";
+        if(this.connected){
+            saida.println(msg);
+            leit = entrada.nextLine();
+        }
         return leit;
     }
     private Scanner entrada;

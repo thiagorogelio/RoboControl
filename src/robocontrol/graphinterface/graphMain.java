@@ -543,11 +543,11 @@ public class graphMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void pressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pressed
-        conexao.send("up " + this.jSlider1.getValue());
+        conexao.send("mu " + this.jSlider1.getValue());
     }//GEN-LAST:event_pressed
 
     private void release(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_release
-        conexao.send("stop");
+        conexao.send("st");
     }//GEN-LAST:event_release
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
@@ -555,32 +555,32 @@ public class graphMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void leftPressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_leftPressed
-        conexao.send("left " + this.jSlider1.getValue());
+        conexao.send("ml " + this.jSlider1.getValue());
     }//GEN-LAST:event_leftPressed
 
     private void leftReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_leftReleased
-        conexao.send("stop");
+        conexao.send("st");
     }//GEN-LAST:event_leftReleased
 
     private void rightPressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rightPressed
-        conexao.send("right " + this.jSlider1.getValue());
+        conexao.send("mr " + this.jSlider1.getValue());
     }//GEN-LAST:event_rightPressed
 
     private void rightReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_rightReleased
-        conexao.send("stop");
+        conexao.send("st");
     }//GEN-LAST:event_rightReleased
 
     private void downPressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_downPressed
-        conexao.send("down " + this.jSlider1.getValue());
+        conexao.send("md " + this.jSlider1.getValue());
     }//GEN-LAST:event_downPressed
 
     private void jButton4MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseReleased
-        conexao.send("stop");
+        conexao.send("st");
     }//GEN-LAST:event_jButton4MouseReleased
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         if(autonState){
-            conexao.send("auton off");
+            conexao.send("at off");
             autonState = false;
             jTabbedPane2.setEnabled(true);
             jComboBox1.setEnabled(true);
@@ -590,11 +590,11 @@ public class graphMain extends javax.swing.JFrame {
             jComboBox1.setEnabled(false);
             autonState = true;
             if(jComboBox1.getSelectedItem().toString().matches("Segue Linha"))
-            conexao.send("auton segue");
+            conexao.send("at fol");
             else if(jComboBox1.getSelectedItem().toString().matches("Desvia Objeto"))
-            conexao.send("auton desvia");
+            conexao.send("at avo");
             else if(jComboBox1.getSelectedItem().toString().matches("Captura Objeto"))
-            conexao.send("auton captura");
+            conexao.send("at cap");
         }
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
@@ -606,19 +606,19 @@ public class graphMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jToggleButton2ActionPerformed
 
     private void jSlider2MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSlider2MouseDragged
-        conexao.send("rotarm " + this.jSlider2.getValue());
+        conexao.send("ra " + this.jSlider2.getValue());
     }//GEN-LAST:event_jSlider2MouseDragged
 
     private void jSlider4MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSlider4MouseDragged
-        conexao.send("altarm " + this.jSlider4.getValue());
+        conexao.send("al " + this.jSlider4.getValue());
     }//GEN-LAST:event_jSlider4MouseDragged
 
     private void jSlider5MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSlider5MouseDragged
-        conexao.send("rotpulso " + this.jSlider5.getValue());
+        conexao.send("rg " + this.jSlider5.getValue());
     }//GEN-LAST:event_jSlider5MouseDragged
 
     private void jSlider6MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jSlider6MouseDragged
-        conexao.send("garra " + this.jSlider6.getValue());
+        conexao.send("ab " + this.jSlider6.getValue());
     }//GEN-LAST:event_jSlider6MouseDragged
 
     ActionListener clocklistner = (  
@@ -636,11 +636,19 @@ public class graphMain extends javax.swing.JFrame {
                     jMenuItem4.setEnabled(false);
                 }
                 if(leitState && conexao.connected){
-                    String resp = conexao.ask("? " + jCheckBox1.isSelected() + " " + jCheckBox2.isSelected());
+                    String ask = "rd ";
                     if(jCheckBox1.isSelected())
-                        jTextField1.setText(resp.subSequence(0, 1).toString());
+                        ask = ask + "1 ";
+                    else ask = ask + "0 ";
                     if(jCheckBox2.isSelected())
-                        jTextField2.setText(resp.subSequence(2, resp.length()).toString());
+                        ask = ask + "1";
+                    else ask = ask + "0";
+                    conexao.send(ask);
+                    String resp = "vl 1 233";//conexao.ask(ask);
+                    if(jCheckBox1.isSelected())
+                        jTextField1.setText(resp.subSequence(3, 4).toString());
+                    if(jCheckBox2.isSelected())
+                        jTextField2.setText(resp.subSequence(5, resp.length()).toString());
                 }
             }  
         }  
