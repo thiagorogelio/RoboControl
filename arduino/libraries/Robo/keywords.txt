@@ -1,0 +1,27 @@
+#######################################
+# Syntax Robo Functions
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Robo	KEYWORD1
+
+#######################################
+# Methods and Functions
+#######################################
+inicializa()
+motor.walk(int speed_left, int speed_right)
+motor.stop()
+setAbertura(int value);
+setRotPulso(int value);
+setAltura(int value);
+setRotacao(int value);
+
+int ultrassonic.read();
+int linefinder.read();
+
+autonomy.lineFollow();
+autonomy.lineCatch();
+autonomy.avoidObstacle();
