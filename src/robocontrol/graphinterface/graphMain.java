@@ -43,7 +43,7 @@ public class graphMain extends javax.swing.JFrame {
         leitState = false;
         searchForControllers();
         if(controle != null){
-            ctime = new Timer(25, controllistner);  
+            ctime = new Timer(50, controllistner);  
             ctime.start();
         }  
     }
@@ -722,7 +722,17 @@ public class graphMain extends javax.swing.JFrame {
                         isItPressed = false;
                     
                     if(isItPressed)
-                          System.out.println(componentIdentifier.getName());
+                        switch(componentIdentifier.getName()){
+                            case "0": jSlider4.setValue(jSlider4.getValue()+4); jSlider4MouseDragged(null); break;// Alt braço ++
+                            case "1": jSlider2.setValue(jSlider2.getValue()+4); jSlider2MouseDragged(null); break;// Rot braço ++
+                            case "2": jSlider4.setValue(jSlider4.getValue()-4); jSlider4MouseDragged(null); break;// Alt braço --
+                            case "3": jSlider2.setValue(jSlider2.getValue()-4); jSlider2MouseDragged(null); break;// Rot braço --
+                            case "4": jSlider6.setValue(jSlider6.getValue()+4); jSlider6MouseDragged(null); break;// Abert garra ++
+                            case "5": jSlider5.setValue(jSlider5.getValue()+4); jSlider5MouseDragged(null); break;// Rot garra ++
+                            case "6": jSlider6.setValue(jSlider6.getValue()-4); jSlider6MouseDragged(null); break;// Abert garra --
+                            case "7": jSlider5.setValue(jSlider5.getValue()-4); jSlider5MouseDragged(null); break;// Rot garra --
+                            default: break;
+                        }
                     
                     // Button index
                     String buttonIndex;
@@ -757,15 +767,38 @@ public class graphMain extends javax.swing.JFrame {
                         continue; // Go to next component.
                     }
                 }
-            }
-
-            if(xAxisPercentage - antxAxisPercentage > 49 || xAxisPercentage - antxAxisPercentage < -49){
+            }              
+               
+            if(xAxisPercentage != antxAxisPercentage){
                 antxAxisPercentage = xAxisPercentage;
-                System.out.println(xAxisPercentage);
-                //if(xAxisPercentage > 50)
-                  //jButton3.
+                if(xAxisPercentage > 80)
+                    conexao.send("mu 100");
+                else if(xAxisPercentage < 30)
+                    conexao.send("md 100");
+                else
+                    conexao.send("st");
+                    antxAxisPercentage = xAxisPercentage;
             }
+            
+            if(yAxisPercentage > 80)
+                yAxisPercentage = 100;
+            else if(yAxisPercentage < 30)
+                yAxisPercentage = 0;
+            else
+                yAxisPercentage = 50;
+               
+            if(yAxisPercentage != antyAxisPercentage){
+                antyAxisPercentage = yAxisPercentage;
+                if(yAxisPercentage > 80)
+                    conexao.send("mf 100");
+                else if(yAxisPercentage < 30)
+                    conexao.send("ml 100");
+                else
+                    conexao.send("st");
+                    antyAxisPercentage = yAxisPercentage;
             }
+            
+        }
         }  
     );
     /**

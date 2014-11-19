@@ -52,13 +52,13 @@ public class Connection {
         }
     }
     public void send(String msg){
-            msg = msg + "*";
+            //msg = msg + "*";
             if(this.connected)
                  saida.println(msg);
     }
     public String ask(String msg){
         String leit = null;
-        msg = msg + "*";
+        //msg = msg + "*";
         if(this.connected){
             saida.println(msg);
             leit = entrada.nextLine();
